@@ -46,4 +46,4 @@ nbproject
 .settings
 composer.lock
 yarn.lock
-node_module
+node_module/
