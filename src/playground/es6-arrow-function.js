@@ -1,30 +1,22 @@
-let count = 0;
-const addOne = () => {
-	count++;
-	// Each time addOne function is called renderCounterApp() creates a new template with current count values and adds to the dom
-	renderCounterApp();
-};
-const minusOne = () => {
-	count--;
-	renderCounterApp();
-};
-const reset = () => {
-	count = 0;
-	renderCounterApp();
+var person = {
+	name: 'Mike',
+	places: [ 'China', 'Japan', 'Australia' ],
+	printPlaces: function () {
+		console.log( this ); // this refers to person object here
+
+		// ES5 foreach loop that runs through each item of the places array. Comment this section while checking result for arrow function below.
+		this.places.forEach( function ( city ) {
+			console.log( this.name ); // this not available inside a functions function and its undefined
+		} );
+
+		/**
+		 * ES6 the arrow functions no longer bind their own this value. They just use the this value of the context they were created in.
+		 * So they will use their parents this value
+		 */
+		this.places.forEach( ( city ) => {
+			console.log( this.name ); // this is now available and refers to its parent's ( printPlaces ) this value which is the person object
+		} );
+	}
 };
 
-let divEl = document.getElementById( 'appId' );
-
-const renderCounterApp = () => {
-	const templateTwo = (
-		<div>
-			<h1>Count: {count}</h1>
-			<button onClick={ addOne }>+1</button>
-			<button onClick={ minusOne }>-1</button>
-			<button onClick={ reset }>Reset</button>
-		</div>
-	);
-	ReactDOM.render( templateTwo, divEl );
-};
-// Called this so that our template gets rendered when the page is loaded
-renderCounterApp();
+person.printPlaces();
