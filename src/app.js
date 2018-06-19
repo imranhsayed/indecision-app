@@ -2,84 +2,91 @@
  * Indecision App
  */
 
-/**
- * Extending the Component class of React, that gives us component feature of react.
- * React component class requires one of its method to be called, called render().
- */
-class Header extends React.Component {
+const Header = ( props ) => {
+	console.log( props ); // result: {title: "test value"}
+	return (
+		<div>
+			<h1>{ props.title }</h1>
+			{ props.subtitle && <p>{ props.subtitle }</p> }
+		</div>
+	);
+};
 
-	/**
-	 * Whatever is returned by render() here will be available in the JSX expression to <Header /> tag.
-	 */
-	render() {
-		console.log( this.props ); // result: {title: "test value"}
-		return (
-			<div>
-				<h1>{ this.props.title }</h1>
-				<p>{ this.props.subtitle }</p>
-			</div>
-		);
-	}
-}
+Header.defaultProps = {
+	title: 'Indecision'
+};
 
 /**
- * Extending Component class of React as a child class Action,
- * where we define all the actions required in our site.
+ * Functional Based component.
+ *
+ * @param props
+ * @return {*}
+ * @constructor
  */
-class Action extends React.Component {
-
-	/**
-	 * Whatever is returned by render() here will be available in the JSX expression to <Action /> tag.
-	 */
-	render() {
-		return (
-			<div>
-				{/* The disabled value will be flipped to true to false and vice versa,
+const Action = ( props ) => {
+	return (
+		<div>
+			{/* The disabled value will be flipped to true to false and vice versa,
 				 depending on the boolean value of this.props.hasOptions */}
-				<button disabled={ ! this.props.hasOptions } onClick={ this.props.handlePick }>
-					What should I do?
-				</button>
-			</div>
-		);
-	}
-}
+			<button disabled={ ! props.hasOptions } onClick={ props.handlePick }>
+				What should I do?
+			</button>
+		</div>
+	);
+};
 
 /**
- * Extending Component class of React as a child class Options,
- * where we define all the actions required in our site.
+ * Functional Based component.
+ *
+ * @param props
+ * @return {*}
+ * @constructor
  */
-class Options extends React.Component {
-
-	/**
-	 * Whatever is returned by render() here will be available in the JSX expression to <Options /> tag.
-	 */
-	render() {
-		console.log( this.props.options );
-		return (
-			<div>
-				{/* this.props.options will contain the options array defined in Indecision class and we are iterating it over to display each item in para tag
+const Options = ( props ) => {
+	console.log( props.options );
+	return (
+		<div>
+			{/* props.options will contain the options array defined in Indecision class and we are iterating it over to display each item in para tag
 				 Then we are we are passing the item to the Option tag as optionText key-value pair, which will then make it
-				 available in Option class as this.props.optionText*/}
-				{ this.props.options.map( ( item ) => <Option key={ item } optionText={ item }/> ) }
+				 available in Option functional based component as props.optionText*/}
+			{ props.options.map( ( item ) => (
+					<Option
+						handleDeleteOption={ props.handleDeleteOption }
+						key={ item }
+						optionText={ item }
+					/>
+				)
+			) }
 
-				{/* When the button is clicked it will call the handleDeleteOptions() set as a
+			{/* When the button is clicked it will call the handleDeleteOptions() set as a
 				value of handleDeleteOptions property inside Options tag of IndecisionApp class*/}
-				<button onClick={ this.props.handleDeleteOptions } >Remove All</button>
-			</div>
-		);
-	}
-}
+			<button onClick={ props.handleDeleteOptions } >Remove All</button>
+		</div>
+	);
+};
 
-class Option extends React.Component {
-	render () {
-		return (
-			<div>
-				{/* The optionText key value set inside the Options class, is now available here. */}
-				{ <p>{ this.props.optionText }</p> }
-			</div>
-		);
-	}
-}
+/**
+ * Functional Based component.
+ *
+ * @param props
+ * @return {*}
+ * @constructor
+ */
+const Option = ( props ) => {
+	return (
+		<div>
+			{/* The optionText key value set inside the Options functional based component, is now available here. */}
+			{ <p>{ props.optionText }</p> }
+			{<button
+				onClick={ ( event ) => {
+					props.handleDeleteOption( props.optionText )
+				}}
+			>Remove</button>
+			}
+		</div>
+	);
+};
+
 
 /**
  * Extending Component class of React as a child class AddOption,
@@ -114,11 +121,7 @@ class AddOption extends React.Component {
 		const error = this.props.handleAddOption( inputVal );
 
 		// If there is error change the state of error property to the value of the error.
-		this.setState( () => {
-			return {
-				error: error
-			}
-		} );
+		this.setState( () => ( { error: error } ) );
 	}
 
 	/**
@@ -151,17 +154,35 @@ class IndecisionApp extends React.Component {
 		this.handleDeleteOptions = this.handleDeleteOptions.bind( this );
 		this.handlePick = this.handlePick.bind( this );
 		this.handleAddOption = this.handleAddOption.bind( this );
+		this.handleDeleteOption = this.handleDeleteOption.bind( this );
 		this.state = {
-			options: []
+			options: props.options
 		}
 	}
 
+	// Life cycle method
+	componentDidMount() {
+		console.log( 'component did mount' );
+	}
+
+	// Deletes all items.
 	handleDeleteOptions() {
-		this.setState( () => {
-			return {
-				options: []
-			}
-		} );
+		this.setState( () => ( { options: [] } ) );
+	}
+
+	// Deletes a single item.
+	handleDeleteOption( optionToRemove ) {
+
+		this.setState( ( prevState ) => ( {
+			options: prevState.options.filter( ( option ) => {
+
+				/**
+				 * If the optionToRemove clicked by user is not the item in the array then return true,
+				 * meaning keep  the item, otherwise return false and remove the item.
+				 */
+				return optionToRemove !== option;
+			} )
+		} ) );
 	}
 
 	handlePick() {
@@ -180,21 +201,16 @@ class IndecisionApp extends React.Component {
 			return 'Option already exists';
 		}
 
-		this.setState( ( prevState ) => {
-			return {
-				options: prevState.options.concat( option )
-			}
-		} );
+		this.setState( ( prevState ) => ( { options: prevState.options.concat( option ) } ) );
 	}
 
 	render() {
 
 		// You can define a title constant and use its value as the title value of header tag below.
-		const title = 'My Title';
 		const subTitle = 'This is sub title';
 		return (
 			<div>
-				<Header title={ title } subtitle={ subTitle }/>
+				<Header subtitle={ subTitle }/>
 				{/* this.state.options.length will return true if there are items in options array and
 				make the boolean value available to Action class as this.props.hasOptions*/}
 				<Action
@@ -205,6 +221,7 @@ class IndecisionApp extends React.Component {
 					options={ this.state.options }
 					// This will give access to handleDeleteOptions() inside Options component
 					handleDeleteOptions={ this.handleDeleteOptions }
+					handleDeleteOption={ this.handleDeleteOption }
 				/>
 				<AddOption handleAddOption={ this.handleAddOption }/>
 			</div>
@@ -212,6 +229,11 @@ class IndecisionApp extends React.Component {
 	}
 }
 
+IndecisionApp.defaultProps = {
+	options: [ 'Amy', 'Jacky' ]
+};
+
+
 const app = document.getElementById( 'appId' );
 
-ReactDOM.render( <IndecisionApp/>, app );
+ReactDOM.render( <IndecisionApp options={ ['Neha', 'Smita'] }/>, app );
