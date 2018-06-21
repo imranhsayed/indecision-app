@@ -19,6 +19,8 @@ module.exports = {
 		path: path.join( __dirname, 'public' ), // result /Applications/MAMP/htdocs/react-course-project/indecision-app/public
 		filename: "bundle.js"
 	},
+
+	// We set modules configuration here to set rules for babel-loader
 	module: {
 
 		// Array of rules
@@ -30,5 +32,9 @@ module.exports = {
 			// What files you want to exclude ( excluding node_module dir here )
 			exclude: /node_module/
 		}]
-	}
+	},
+
+	// We set devtools configuration here to handle errors
+	devtool: "cheap-eval-source-map",
 };
+
