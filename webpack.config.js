@@ -18,5 +18,17 @@ module.exports = {
 		 */
 		path: path.join( __dirname, 'public' ), // result /Applications/MAMP/htdocs/react-course-project/indecision-app/public
 		filename: "bundle.js"
+	},
+	module: {
+
+		// Array of rules
+		rules: [{
+			// define babel-loader
+			loader: "babel-loader",
+			// What files does this loader need to run on inside reg-exp ( here all js files )
+			test: /\.js$/,
+			// What files you want to exclude ( excluding node_module dir here )
+			exclude: /node_module/
+		}]
 	}
 };
