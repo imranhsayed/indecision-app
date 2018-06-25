@@ -36,5 +36,10 @@ module.exports = {
 
 	// We set devtools configuration here to handle errors
 	devtool: "cheap-eval-source-map",
+
+	// Set up dev server configurations
+	devServer: {
+		contentBase: path.join( __dirname, 'public' ) // result /Applications/MAMP/htdocs/react-course-project/indecision-app/public
+	}
 };
 
