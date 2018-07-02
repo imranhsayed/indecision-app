@@ -25,12 +25,21 @@ module.exports = {
 
 		// Array of rules
 		rules: [{
-			// define babel-loader
+			// define babel-loader to run babel
 			loader: "babel-loader",
 			// What files does this loader need to run on inside reg-exp ( here all js files )
 			test: /\.js$/,
 			// What files you want to exclude ( excluding node_module dir here )
 			exclude: /node_module/
+		}, {
+			// This will include any file that ends with .scss
+			test: /\.scss$/,
+			// use allows us to provide an array of loaders.
+			use: [
+				'style-loader',
+				'css-loader',
+				'sass-loader'
+			]
 		}]
 	},
 

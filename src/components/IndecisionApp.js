@@ -4,6 +4,7 @@ import AddOption from './AddOption';
 import Action from './Action';
 import Header from './Header';
 import Options from './Options';
+import OptionModal from './OptionModal';
 
 
 /**
@@ -14,15 +15,65 @@ import Options from './Options';
  */
 export default class IndecisionApp extends React.Component {
 
-	constructor( props ) {
-		super( props );
-		this.handleDeleteOptions = this.handleDeleteOptions.bind( this );
-		this.handlePick = this.handlePick.bind( this );
-		this.handleAddOption = this.handleAddOption.bind( this );
-		this.handleDeleteOption = this.handleDeleteOption.bind( this );
-		this.state = {
-			options: props.options
+
+	state = {
+		options: [],
+		selectedOption: undefined
+	};
+	// constructor( props ) {
+	// 	super( props );
+	// 	this.handleDeleteOptions = this.handleDeleteOptions.bind( this );
+	// 	this.handlePick = this.handlePick.bind( this );
+	// 	this.handleAddOption = this.handleAddOption.bind( this );
+	// 	this.handleDeleteOption = this.handleDeleteOption.bind( this );
+	// }
+
+	// Deletes all items.
+	handleDeleteOptions = () => {
+		this.setState( () => ( { options: [] } ) );
+	};
+
+	// Clears the selected option in the Modal pop up.
+	handleClearSelectedOption = () => {
+		this.setState( () => ( { selectedOption: undefined } ) );
+	};
+
+	// Deletes a single item.
+	handleDeleteOption = ( optionToRemove ) => {
+
+		this.setState( ( prevState ) => ( {
+			options: prevState.options.filter( ( option ) => {
+
+				/**
+				 * If the optionToRemove clicked by user is not the item in the array then return true,
+				 * meaning keep  the item, otherwise return false and remove the item.
+				 */
+				return optionToRemove !== option;
+			} )
+		} ) );
+	};
+
+	handlePick = () => {
+		let arrayLength = this.state.options.length;
+		let randomNum = Math.floor( Math.random() * arrayLength );
+		const option = this.state.options[ randomNum ];
+
+		this.setState( () => ({
+			selectedOption: option
+		}) );
+	};
+
+	handleAddOption = ( option ) => {
+
+		// Set validation : If user has not entered any value return an error string.
+		if ( ! option ) {
+			return 'Please enter a value';
+			// if the option value entered already exists in the option array
+		} else if ( this.state.options.indexOf( option ) > -1 ) {
+			return 'Option already exists';
 		}
+
+		this.setState( ( prevState ) => ( { options: prevState.options.concat( option ) } ) );
 	}
 
 	// Life cycle method : gets fired when Component enters the screen
@@ -60,45 +111,6 @@ export default class IndecisionApp extends React.Component {
 		console.log( 'component unmounted' );
 	}
 
-	// Deletes all items.
-	handleDeleteOptions() {
-		this.setState( () => ( { options: [] } ) );
-	}
-
-	// Deletes a single item.
-	handleDeleteOption( optionToRemove ) {
-
-		this.setState( ( prevState ) => ( {
-			options: prevState.options.filter( ( option ) => {
-
-				/**
-				 * If the optionToRemove clicked by user is not the item in the array then return true,
-				 * meaning keep  the item, otherwise return false and remove the item.
-				 */
-				return optionToRemove !== option;
-			} )
-		} ) );
-	}
-
-	handlePick() {
-		let arrayLength = this.state.options.length;
-		let randomNum = Math.floor( Math.random() * arrayLength );
-		alert( this.state.options[ randomNum ] );
-	}
-
-	handleAddOption( option ) {
-
-		// Set validation : If user has not entered any value return an error string.
-		if ( ! option ) {
-			return 'Please enter a value';
-			// if the option value entered already exists in the option array
-		} else if ( this.state.options.indexOf( option ) > -1 ) {
-			return 'Option already exists';
-		}
-
-		this.setState( ( prevState ) => ( { options: prevState.options.concat( option ) } ) );
-	}
-
 	render() {
 
 		// You can define a title constant and use its value as the title value of header tag below.
@@ -119,6 +131,10 @@ export default class IndecisionApp extends React.Component {
 					handleDeleteOption={ this.handleDeleteOption }
 				/>
 				<AddOption handleAddOption={ this.handleAddOption }/>
+				<OptionModal
+					selectedOption = { this.state.selectedOption }
+					handleClearSelectedOption = { this.handleClearSelectedOption }
+				/>
 			</div>
 		);
 	}

@@ -6,16 +6,24 @@ import React from 'react';
  */
 export default class AddOption extends React.Component {
 
+	/**
+	 * When using the transform-class-properties plugin you don't have to create a constructor, you can directly use the name and value pair,
+	 * and it will be available as class property and value after the class is instantiated.
+	 */
+	state = {
+		error: undefined
+	};
+
 	constructor( props ) {
 		super( props );
-		this.handleAddOption = this.handleAddOption.bind( this );
+		// this.handleAddOption = this.handleAddOption.bind( this );
 		// Add the error property inside the state object and set its default value to undefined
-		this.state = {
-			error: undefined
-		};
+		// this.state = {
+		// 	error: undefined
+		// };
 	}
 
-	handleAddOption( event ) {
+	handleAddOption = ( event ) => {
 		event.preventDefault();
 		console.log( 'test' );
 

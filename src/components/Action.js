@@ -7,16 +7,14 @@ import React from 'react';
  * @return {*}
  * @constructor
  */
-const Action = ( props ) => {
-	return (
-		<div>
-			{/* The disabled value will be flipped to true to false and vice versa,
+const Action = ( props ) => (
+	<div>
+		{/* The disabled value will be flipped to true to false and vice versa,
 				 depending on the boolean value of this.props.hasOptions */}
-			<button disabled={ ! props.hasOptions } onClick={ props.handlePick }>
-				What should I do?
-			</button>
-		</div>
-	);
-};
+		<button disabled={ ! props.hasOptions } onClick={ props.handlePick }>
+			What should I do?
+		</button>
+	</div>
+);
 
 export default Action;
