@@ -118,19 +118,23 @@ export default class IndecisionApp extends React.Component {
 		return (
 			<div>
 				<Header subtitle={ subTitle }/>
-				{/* this.state.options.length will return true if there are items in options array and
+				<div className="container">
+					{/* this.state.options.length will return true if there are items in options array and
 				make the boolean value available to Action class as this.props.hasOptions*/}
-				<Action
-					hasOptions={ this.state.options.length }
-					handlePick={ this.handlePick }
-				/>
-				<Options
-					options={ this.state.options }
-					// This will give access to handleDeleteOptions() inside Options component
-					handleDeleteOptions={ this.handleDeleteOptions }
-					handleDeleteOption={ this.handleDeleteOption }
-				/>
-				<AddOption handleAddOption={ this.handleAddOption }/>
+					<Action
+						hasOptions={ this.state.options.length }
+						handlePick={ this.handlePick }
+					/>
+					<div className="widget">
+						<Options
+							options={ this.state.options }
+							// This will give access to handleDeleteOptions() inside Options component
+							handleDeleteOptions={ this.handleDeleteOptions }
+							handleDeleteOption={ this.handleDeleteOption }
+						/>
+						<AddOption handleAddOption={ this.handleAddOption }/>
+					</div>
+				</div>
 				<OptionModal
 					selectedOption = { this.state.selectedOption }
 					handleClearSelectedOption = { this.handleClearSelectedOption }

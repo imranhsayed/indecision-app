@@ -32,8 +32,8 @@ module.exports = {
 			// What files you want to exclude ( excluding node_module dir here )
 			exclude: /node_module/
 		}, {
-			// This will include any file that ends with .scss
-			test: /\.scss$/,
+			// This will include any file that ends with .scss and .css
+			test: /\.s?css$/,
 			// use allows us to provide an array of loaders.
 			use: [
 				'style-loader',
